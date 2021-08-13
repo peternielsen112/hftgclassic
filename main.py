@@ -1,7 +1,5 @@
 # import statements
 import pgzrun
-import pygame
-import pygame.locals as pl
 from pygame.locals import *
 
 #constants
@@ -30,7 +28,10 @@ tie = Actor('tiefighter', (WIDTH/2,HEIGHT/2))
 
 #get keyboard input
 def get_keyboard(speed):
-    pass
+    if keyboard.left:
+        ship.x -= speed
+    elif keyboard.right:
+        ship.x += speed
 
 #mainloop
 def update():
