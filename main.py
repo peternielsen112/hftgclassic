@@ -34,7 +34,12 @@ def get_keyboard(SPEED):
 def update():
     get_keyboard(SPEED)
 def draw():
-    screen.clear()
-    screen.blit('logo', (WIDTH * 0.08,HEIGHT/3))
-    screen.draw.text(str('<Press the DOWN key to begin>'), (WIDTH - 400, HEIGHT - 30))
+    if game.view == 'splash':
+        screen.clear()
+        screen.blit('logo', (WIDTH * 0.08,HEIGHT/3))
+        screen.draw.text(str('<Press the DOWN key to begin>'), (WIDTH - 400, HEIGHT - 30))
+    else:
+        screen.clear()
+        screen.blit('background1', (0,0))
+        ship.draw()
 pgzrun.go()
