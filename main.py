@@ -22,7 +22,8 @@ game = Game()
 
 #actors
 ship = Actor('xwing', (WIDTH/2, HEIGHT))
-ship.y = HEIGHT - ship.height/2
+ship_height = HEIGHT - ship.height/2 - 5
+ship.y = ship_height
 
 tie = Actor('tiefighter', (WIDTH/2,HEIGHT/2))
 
@@ -32,10 +33,43 @@ def get_keyboard(speed):
         ship.x -= speed
     elif keyboard.right:
         ship.x += speed
+    elif keyboard.space:
+        pass
+
+#tie motion
+def tie_motion():
+    tie_speed = 7 + game.score / 500
+    tie.y += tie_speed
+
+#reset tie
+def reset_tie():
+    tie.pos = (WIDTH/2, 0)
+
+#death
+def death():
+    ship.pos = (WIDTH/2, ship_height)
+    game.score -= 100
+    game.deaths += 1
+
+#out of screen function
+def out_screen():
+    if ship.x < 0 or ship.x > WIDTH:
+        death()
+    elif tie.y > HEIGHT:
+        reset_tie()
+
+#testing hits
+def test_hit():
+    if tie.colliderect(ship):
+        death()
+        reset_tie()
 
 #mainloop
 def update():
     get_keyboard(SPEED)
+    out_screen()
+    tie_motion()
+    test_hit()
 def draw():
     if game.view == 'splash':
         screen.clear()
