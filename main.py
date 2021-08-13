@@ -15,7 +15,7 @@ class Game():
     def __init__(self):
         self.score = 0
         self.mode = 'endless'
-        self.view = 'splash'
+        self.view = 'spash'
         self.end = False
         self.kills = 0
         self.deaths = 0
@@ -26,8 +26,10 @@ game = Game()
 ship = Actor('xwing', (WIDTH/2, HEIGHT))
 ship.y = HEIGHT - ship.height/2
 
+tie = Actor('tiefighter', (WIDTH/2,HEIGHT/2))
+
 #get keyboard input
-def get_keyboard(SPEED):
+def get_keyboard(speed):
     pass
 
 #mainloop
@@ -42,4 +44,5 @@ def draw():
         screen.clear()
         screen.blit('background1', (0,0))
         ship.draw()
+        tie.draw()
 pgzrun.go()
