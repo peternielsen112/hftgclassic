@@ -1,6 +1,7 @@
 # import statements
 import pgzrun
 import random
+import pygame
 from pygame.locals import *
 
 #constants
@@ -13,13 +14,14 @@ BACKGROUND_IMAGE = 'background1'
 class Game():
     def __init__(self):
         self.score = 0
-        self.mode = 'endless'
-        self.view = 'spash'
-        self.end = False
+        self.view = 'splash'
         self.kills = 0
         self.deaths = 0
-        self.quota = -1
 game = Game()
+
+# music
+pygame.mixer.music.load('theme.mp3')
+pygame.mixer.music.play(loops=-1)
 
 #actors
 ship = Actor('xwing', (WIDTH/2, HEIGHT))
@@ -30,6 +32,10 @@ tie = Actor('tiefighter', (WIDTH/2,HEIGHT/2))
 
 laser = Actor('laser', (-WIDTH,-HEIGHT))
 
+explosion = Actor('explosion', (-WIDTH,-HEIGHT))
+explosion.active = False
+explosion.inTimes = 0
+
 #laser functions
 def laser_motion(speed):
     laser.y -= speed
@@ -39,6 +45,15 @@ def fire():
 def reset_laser():
     laser.pos = (-HEIGHT, -WIDTH)
 
+#end game
+def end_game():
+    print(f'\n\n\n\nGame Ended!\n\nScore: {game.score}\nKills: {game.kills}\nDeaths: {game.deaths}')
+
+#stop score from going below zero
+def score_check():
+    if game.score < 0:
+        game.score = 0
+
 #get keyboard input
 def get_keyboard(speed):
     if keyboard.left:
@@ -47,14 +62,25 @@ def get_keyboard(speed):
         ship.x += speed
     elif keyboard.space:
         fire()
+    elif keyboard.down and game.view == 'splash':
+        game.score = 0
+        game.kills = 0
+        game.deaths = 0
+        game.view = 'level-1'
+    elif keyboard.q:
+        end_game()
+        quit()
 
 #tie motion
 def tie_motion():
-    tie_speed = 7 + game.score / 3500
+    tie_speed = SPEED + game.score / 3500
     tie.y += tie_speed
 
 #reset tie
 def reset_tie():
+    explosion.active = True
+    explosion.x = tie.x
+    explosion.y = tie.y
     tiestart = random.randint(5,WIDTH-5)
     tie.pos = (tiestart, 0)
 
@@ -69,6 +95,7 @@ def out_screen():
     if ship.x < 0 or ship.x > WIDTH:
         death()
     elif tie.y > HEIGHT:
+        game.score -= 100
         reset_tie()
 
 #testing hits
@@ -78,8 +105,18 @@ def test_hit():
         reset_tie()
     elif tie.colliderect(laser):
         reset_laser()
-        game.score += 100
+        game.score += round(100+tie.x/5)
+        game.kills += 1
         reset_tie()
+
+def explosion_check():
+    if explosion.active == True:
+        if explosion.inTimes >= 15:
+            explosion.active = False
+            explosion.pos = (-WIDTH, -HEIGHT)
+            explosion.inTimes = 0
+        else:
+            explosion.inTimes += 1
 
 #mainloop
 def update():
@@ -88,6 +125,8 @@ def update():
     tie_motion()
     test_hit()
     laser_motion(SPEED)
+    score_check()
+    explosion_check()
 def draw():
     if game.view == 'splash':
         screen.clear()
@@ -99,4 +138,9 @@ def draw():
         ship.draw()
         tie.draw()
         laser.draw()
+        explosion.draw()
+        screen.draw.text(str(f'Score: {game.score}'), (WIDTH/20, HEIGHT/20))
+        screen.draw.text(str(f'Kills: {game.kills}'), (WIDTH/20, HEIGHT/30 - 5))
+        screen.draw.text(str(f'Deaths: {game.deaths}'), (WIDTH/20, HEIGHT/10 - 15))
 pgzrun.go()
+end_game()
