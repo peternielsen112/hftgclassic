@@ -1,5 +1,6 @@
 # import statements
 import pgzrun
+import random
 from pygame.locals import *
 
 #constants
@@ -35,6 +36,8 @@ def laser_motion(speed):
 def fire():
     lasery = ship.y - ship.height/2 - laser.height/2
     laser.pos = (ship.x,lasery)
+def reset_laser():
+    laser.pos = (-HEIGHT, -WIDTH)
 
 #get keyboard input
 def get_keyboard(speed):
@@ -47,12 +50,13 @@ def get_keyboard(speed):
 
 #tie motion
 def tie_motion():
-    tie_speed = 7 + game.score / 500
+    tie_speed = 7 + game.score / 3500
     tie.y += tie_speed
 
 #reset tie
 def reset_tie():
-    tie.pos = (WIDTH/2, 0)
+    tiestart = random.randint(5,WIDTH-5)
+    tie.pos = (tiestart, 0)
 
 #death
 def death():
@@ -71,6 +75,10 @@ def out_screen():
 def test_hit():
     if tie.colliderect(ship):
         death()
+        reset_tie()
+    elif tie.colliderect(laser):
+        reset_laser()
+        game.score += 100
         reset_tie()
 
 #mainloop
