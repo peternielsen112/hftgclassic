@@ -27,6 +27,15 @@ ship.y = ship_height
 
 tie = Actor('tiefighter', (WIDTH/2,HEIGHT/2))
 
+laser = Actor('laser', (-WIDTH,-HEIGHT))
+
+#laser functions
+def laser_motion(speed):
+    laser.y -= speed
+def fire():
+    lasery = ship.y - ship.height/2 - laser.height/2
+    laser.pos = (ship.x,lasery)
+
 #get keyboard input
 def get_keyboard(speed):
     if keyboard.left:
@@ -34,7 +43,7 @@ def get_keyboard(speed):
     elif keyboard.right:
         ship.x += speed
     elif keyboard.space:
-        pass
+        fire()
 
 #tie motion
 def tie_motion():
@@ -70,6 +79,7 @@ def update():
     out_screen()
     tie_motion()
     test_hit()
+    laser_motion(SPEED)
 def draw():
     if game.view == 'splash':
         screen.clear()
@@ -80,4 +90,5 @@ def draw():
         screen.blit('background1', (0,0))
         ship.draw()
         tie.draw()
+        laser.draw()
 pgzrun.go()
