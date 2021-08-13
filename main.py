@@ -47,7 +47,7 @@ def reset_laser():
 
 #end game
 def end_game():
-    print(f'\n\n\n\nGame Ended!\n\nScore: {game.score}\nKills: {game.kills}\nDeaths: {game.deaths}')
+    print(f'\n\n\n\nGame Ended!\n\nScore: {game.score}\nKills: {game.kills}\nDeaths: {game.deaths}\nTie Speed: {SPEED + game.score / 3500}')
 
 #stop score from going below zero
 def score_check():
@@ -72,15 +72,13 @@ def get_keyboard(speed):
         quit()
 
 #tie motion
-def tie_motion():
-    tie_speed = SPEED + game.score / 3500
-    tie.y += tie_speed
+def tie_motion(TIE_SPEED):
+    tie.y += TIE_SPEED
 
 #reset tie
 def reset_tie():
     explosion.active = True
-    explosion.x = tie.x
-    explosion.y = tie.y
+    explosion.pos = tie.pos
     tiestart = random.randint(5,WIDTH-5)
     tie.pos = (tiestart, 0)
 
@@ -122,7 +120,7 @@ def explosion_check():
 def update():
     get_keyboard(SPEED)
     out_screen()
-    tie_motion()
+    tie_motion(SPEED + game.score / 3500)
     test_hit()
     laser_motion(SPEED)
     score_check()
@@ -142,5 +140,6 @@ def draw():
         screen.draw.text(str(f'Score: {game.score}'), (WIDTH/20, HEIGHT/20))
         screen.draw.text(str(f'Kills: {game.kills}'), (WIDTH/20, HEIGHT/30 - 5))
         screen.draw.text(str(f'Deaths: {game.deaths}'), (WIDTH/20, HEIGHT/10 - 15))
+        screen.draw.text(str(f'Tie Speed: {round(SPEED + game.score / 3500)}'), (WIDTH/20, HEIGHT/10))
 pgzrun.go()
 end_game()
