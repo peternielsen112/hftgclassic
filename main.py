@@ -19,10 +19,6 @@ class Game():
         self.deaths = 0
 game = Game()
 
-# music
-pygame.mixer.music.load('theme.mp3')
-pygame.mixer.music.play(loops=-1)
-
 #actors
 ship = Actor('xwing', (WIDTH/2, HEIGHT))
 ship_height = HEIGHT - ship.height/2 - 5
