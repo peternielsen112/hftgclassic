@@ -1,3 +1,11 @@
+'''
+Hope For the Galaxy Classic
+A game by Peter Nielsen (@peternielsen112)
+Licensed under GNU General Public License 3.0 (see LICENSE.md for details)
+For instructions on how to play, see README.md
+Run this file with python3 main.py
+'''
+
 # import statements
 import pgzrun
 import random
